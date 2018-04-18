@@ -6,7 +6,7 @@ library("skmeans")
 library(spam)
 library("Matrix")
 library("skmeans")
-install.packages("SNMF")
+install.packages("NMF")
 
 #datasongs=readMat("C:/Users/Le novo/Desktop/donnee_l2.mat")
 #songs =datasongs$norm
@@ -14,22 +14,29 @@ dataBrut=read.csv("C:/Users/anisboyka/Desktop/projettutore/songsDataset.csv")
 dim(dataBrut)
 set.seed(1)
 data_package <- data(package = "recommenderlab")
-realsongs100=as(songs[1:1000,1:1000],"realRatingMatrix")
+realsongs100=as(dataBrut[1:1000,1:3],"realRatingMatrix")
 dim(realsongs100)
-
+class(realsongs100)
+library(reshape2)
+row=dataBrut$X.userID.
+column=dataBrut$X.songID.
+note=dataBrut$X.rating.
+jeu=dataBrut[1:1000,1:3]
+library("reshape2")
+s=table(jeu$X.userID.,jeu$X.songID.)
+dim(s)
+p=as.data.frame.matrix(s)
+dim(p)
+class(p)
 ##################################################################################################################################""
 
 ##### / * partie NMF ET CLUSTERING /
-library(SNMF)
+library(NMF)
 library("fastICA")
-
+install.packages("fastICA")
 
 install.packages('reshape')
 library(reshape)
-s=melt(songs100,id.vars=songs100$X.songID.)
-cast(songs100, songs100$X.userID.~songs100$X.songID.)
-
-help(melt)
 
 dim(databrut)
 songs100=databrut[1:100,1:3]
@@ -38,7 +45,23 @@ meth <- nmfAlgorithm(version = "R")
 meth <- c(names(meth), meth)
 d=table(songs100)
 
-res.nmf=nmf(z,1:20,seed="ica",nrun=20)
+dim(p)
+res <- nmf(p,1:3,meth, seed = 123456)
+resultat=nmfEstimateRank(p,1:3,meth,model = NULL,verbose = TRUE, stop = FALSE)
+
+plot(res$lee,resultat$fit)
+
+
+t <- sapply(res, runtime)[3, ]
+
+summary(res)
+
+
+plot(res)
+
+
+res.nmf=nmf(p,seq(1:20),seed="ica")
+
 plot(res.nmf)
 (recc_data_test)
 t <- sapply(res.nmf, runtime)[3, ]
